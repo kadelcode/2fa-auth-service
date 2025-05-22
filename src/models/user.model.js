@@ -21,6 +21,9 @@ const userSchema = new mongoose.Schema({
 
     // Secret key used for 2FA (when 2FA is enabled)
     twoFASecret: String,
+
+    // Refresh Token
+    refreshToken: String,
 });
 
 // Create and export the User model based on the schema
