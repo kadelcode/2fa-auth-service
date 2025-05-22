@@ -19,5 +19,8 @@ router.post('/2fa/setup', authController.setup2FA);
 // Define a POST route for verifying two-factor authentication (2FA) codes
 router.post('/2fa/verify', authController.verify2FA);
 
+// Define a POST route for refreshing tokens
+router.post('/refresh-token', authController.refreshToken);
+
 // Export the router to make it available for use in other parts of the application
 module.exports = router;
