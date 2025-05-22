@@ -86,3 +86,43 @@ exports.verify2FA = async (req, res) => {
     const jwtToken = authService.generateToken(user);
     res.json({ token: jwtToken });
 };
+
+
+// Controller function to handle refresh token requests
+// This endpoint is used to get new access and refresh tokens when the access token expires
+exports.refreshToken = async (req, res) => {
+    const { token } = req.body; // Extract the refresh token from the request body
+
+    try {
+        // Verify the refresh token
+        // Checks if the token is valid and not expired
+        const payload = authService.verifyRefreshToken(token);
+
+        // Find the user associated with the token using the ID from the payload
+        const user = await User.findById(payload.id);
+
+        // Check if:
+        // 1. User exists
+        // 2. The stored refresh token matches the one provided
+        // If either check fails, return 401 Unauthorized
+        if (!user || user.refreshToken !== token) return res.status(401).send();
+
+        // Generate new tokens:
+        // 1. New short-lived access token
+        // 2. New long-lived refresh token
+        const newAccessToken = authService.generateToken(user);
+        const newRefreshToken = authService.generateRefreshToken(user);
+
+        // Update the user's refresh token in the database
+        user.refreshToken = newRefreshToken;
+        await user.save();
+
+        // Return both new tokens to the client
+        res.json({
+          accessToken: newAccessToken,      // New access token
+          refreshToken: newRefreshToken,    // New refresh token 
+        });
+    } catch {
+        res.status(403).json({ message: 'Invalid refresh token' });
+    }
+}
