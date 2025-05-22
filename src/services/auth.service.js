@@ -74,6 +74,30 @@ const verify2FAToken = (secret, token) => {
     });
 }
 
+/**
+ * Function to generate a refresh token for a user
+ * Refresh tokens are long-lived tokens used to obtain new access tokens
+ * @param {string} user - user's ID
+ * @returns the signed JWT (JSON Web Token ) containing the user's ID
+ * Signed with the application's JWT_SECRET from environment variables
+ */
+const generateRefreshToken = (user) => {
+    return jwt.sign({ 
+      id: user._id },           // Payload containing user identifier
+      process.env.JWT_SECRET,   // Secret key for signing the token 
+      { expiresIn: '7d' }       // Token expiration time (7 days)
+    );
+};
+
+// Function to verify a refresh token
+// Used to check if a refresh token is valid and hasn't been tampered with
+const verifyRefreshToken = (token) => {
+    return jwt.verify(
+      token,                    // The refresh token to verify
+      process.env.JWT_SECRET    // Secret key used to verify the signature
+    );
+};
+
 // Export all the functions to be used in other files
 module.exports = {
     register,
@@ -81,4 +105,6 @@ module.exports = {
     generateToken,
     generate2FASecret,
     verify2FAToken,
+    generateRefreshToken,
+    verifyRefreshToken,
 };
