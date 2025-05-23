@@ -4,6 +4,9 @@ const express = require('express');
 // Import dotenv to load environment variables from a `.env` file
 const dotenv = require('dotenv');
 
+// Import cors to enable Cross-Origin Resource Sharing
+const cors = require('cors');
+
 // Import the authentication routes from a separate file
 const authRoutes = require('./routes/auth.routes');
 
@@ -12,6 +15,9 @@ dotenv.config();
 
 // Create an Express application instance
 const app = express();
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Add middleware to parse incoming JSON requests
 // This allows the server to automatically parse JSON data sent in request bodies
