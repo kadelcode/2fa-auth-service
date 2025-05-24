@@ -44,24 +44,32 @@ exports.login = async (req, res) => {
 
 // Controller for setting up Two-Factor Authentication (2FA)
 exports.setup2FA = async (req, res) => {
-    // Get userId from request body
-    const { userId } = req.body;
+    try {
+        // Get userId from request body
+        const { userId } = req.body;
 
-    // Find user by ID
-    const user = await User.findById(userId);
+        // Find user by ID
+        const user = await User.findById(userId);
 
-    // Generate 2FA secret for this user
-    const secret = authService.generate2FASecret(user.email);
+        // Generate 2FA secret for this user
+        const secret = authService.generate2FASecret(user.email);
 
-    // Save the secret to the user document
-    user.twoFASecret = secret.base32;
-    await user.save();
+        // Save the secret to the user document
+        user.twoFASecret = secret.base32;
+        await user.save();
 
-    // Generate QR code URL for the OTP auth URI
-    const qrDataURL = await QRCode.toDataURL(secret.otpauth_url);
+        // Generate QR code URL for the OTP auth URI
+        const qrDataURL = await QRCode.toDataURL(secret.otpauth_url);
 
-    // Return QR code image URL and the secret (for manual entry)
-    res.json({ qrCode: qrDataURL, secret: secret.base32 });
+        // Return QR code image URL and the secret (for manual entry)
+        res.json({ 
+          qrCode: qrDataURL, 
+          secret: secret.base32 
+        });
+    } catch (error){
+        console.error(error);
+        res.status(500).json({ message: 'Failed to generate 2FA QR code' });
+    }
 };
 
 // Controller for verifying 2FA token
