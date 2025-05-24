@@ -11,7 +11,7 @@ exports.register = async (req, res) => {
     const user = await authService.register(email, password);
 
     // Return success response with the new user's ID
-    res.status(201).json({ message: 'User registered', userId: user._id });
+    res.status(201).json({ success: 'User registered', userId: user._id });
 };
 
 // Controller for user login
