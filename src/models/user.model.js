@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     // 2FA (Two-Factor Authentication) enabled flag
     is2FAEnabled: { 
       type: Boolean,    // Must be a boolean
-      default: false    // Default value if false if not specified
+      default: true,    // Default value if false if not specified
     },
 
     // Secret key used for 2FA (when 2FA is enabled)
