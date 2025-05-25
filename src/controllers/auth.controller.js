@@ -51,6 +51,11 @@ exports.setup2FA = async (req, res) => {
         // Find user by ID
         const user = await User.findById(userId);
 
+        // Check if user exists
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
         // Generate 2FA secret for this user
         const secret = authService.generate2FASecret(user.email);
 
