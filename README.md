@@ -87,6 +87,8 @@ docker-compose up --build
 |POST  |```/api/auth/2fa/verify```   |Verify 2FA TOTP code           |
 |POST  |```/api/auth/refresh-token```|Get new access & refresh token |
 
+🔗 Import the [Postman Collection]() or use the included ```postman_collection.json``` file.
+
 ---
 
 
