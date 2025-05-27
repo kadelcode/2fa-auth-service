@@ -78,3 +78,15 @@ docker-compose up --build
 ```
 ---
 
+## 📮 API Endpoints
+|Method|Endpoint                     |Description          |
+|------|-----------------------------|---------------------|
+|POST  |```/api/auth/register```     |Register new user    |
+|POST  |```/api/auth/login```        |Register new user    |
+|POST  |```/api/auth/2fa/setup```    |Register new user    |
+|POST  |```/api/auth/2fa/verify```   |Verify 2FA TOTP code |
+|POST  |```/api/auth/refresh-token```|Get new access & refresh token |
+
+---
+
+
