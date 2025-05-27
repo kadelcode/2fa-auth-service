@@ -44,3 +44,37 @@ A Node.js-based microservice that provides secure user authentication with optio
 ├── docker-compose.yml
 ├── package.json
 └── README.md
+
+
+## 🚀 Getting Started
+
+### 1. Clone the Repo
+
+```
+git clone https://github.com/kadelcode/2fa-auth-service.git
+cd 2fa-auth-service
+```
+
+### 2. Install Dependencies
+```
+npm install
+```
+
+### 3. Set Environment Variables
+Create a ```.env``` file:
+```
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/2fa_auth
+JWT_SECRET=your_jwt_secret
+```
+
+### 4. Run Locally
+```
+npm start
+```
+Or using Docker:
+```
+docker-compose up --build
+```
+---
+
