@@ -91,4 +91,51 @@ docker-compose up --build
 
 ---
 
+## 🔐 2FA Setup & Flow
+1. Register & login normally.
+2. POST ```/2fa/setup``` to get a secret & QR code.
+3. Scan QR in Google Authenticator.
+4. POST ```/2fa/verify``` with the 6-digit code.
+5. On next login, 2FA will be required.
 
+---
+
+## 🧪 Testing
+You can test endpoints using:
+
+- Postman (see included collection)
+- Supertest & Jest (setup testing with app.js export)
+
+Example test file: ```test/auth.test.js```
+
+---
+
+## 🐳 Docker Support
+```
+docker-compose up --build
+```
+- App runs at ```http://localhost:5000```
+- MongoDB runs on port ```27017```
+
+---
+
+## 🔒 Security Notes
+- All secrets are kept in ```.env``` file
+- Passwords are hashed with bcrypt
+- JWT tokens are signed securely
+- 2FA secrets are stored server-side only
+- Refresh tokens are rotated on each use
+
+---
+
+## 🧩 To Do / Extensions
+- Role-based authorization (admin, user, etc.)
+- Email or SMS 2FA option
+- Rate limiting & brute force protection
+- Add Swagger API docs
+- Unit & integration tests
+
+---
+
+## 📝 License
+This project is licensed under the MIT License.
