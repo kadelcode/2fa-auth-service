@@ -79,13 +79,16 @@ docker-compose up --build
 ---
 
 ## 📮 API Endpoints
-|Method|Endpoint                     |Description                    |
-|------|-----------------------------|-------------------------------|
-|POST  |```/api/auth/register```     |Register new user              |
-|POST  |```/api/auth/login```        |Login new user                 |
-|POST  |```/api/auth/2fa/setup```    |Setup 2FA and get QR code      |
-|POST  |```/api/auth/2fa/verify```   |Verify 2FA TOTP code           |
-|POST  |```/api/auth/refresh-token```|Get new access & refresh token |
+|Method|Endpoint                       |Description                     |
+|------|-------------------------------|--------------------------------|
+|POST  |```/api/auth/register```       |Register new user               |
+|POST  |```/api/auth/login```          |Login new user                  |
+|POST  |```/api/auth/2fa/setup```      |Setup 2FA and get QR code       |
+|POST  |```/api/auth/2fa/verify```     |Verify 2FA TOTP code            |
+|POST  |```/api/auth/refresh-token  ```|Get new access & refresh token  |
+|POST  |```/api/auth/forgot-password```|Accepts email, sends reset link |
+|POST  |```/api/auth/reset-password ```|Accepts token and new password    |
+
 
 🔗 Import the [Postman Collection]() or use the included ```postman_collection.json``` file.
 
