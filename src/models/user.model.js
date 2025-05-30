@@ -24,6 +24,12 @@ const userSchema = new mongoose.Schema({
 
     // Refresh Token
     refreshToken: String,
+
+    // QR Code URL for 2FA setup
+    resetPasswordToken: String,
+
+    // Expiration date for the reset password token
+    resetPasswordExpires: Date,
 });
 
 // Create and export the User model based on the schema
