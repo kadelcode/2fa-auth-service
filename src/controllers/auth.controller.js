@@ -182,3 +182,28 @@ exports.forgotPassword = async (req, res) => {
     // Return success response
     res.json({ message: 'Password reset email sent' });
 }
+
+// Controller function to handle password reset requests
+exports.resetPassword = async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    // Find user by reset password token and check if it is still valid
+    const user = await User.findOne({
+        resetPasswordToken: token,
+        resetPasswordExpires: { $gt: Date.now() },
+    })
+
+    if (!user) {
+        return res.status(400).json({ message: 'Invalid or expired token'})
+    }
+    // If user found, hash the new password
+    user.password = await authService.hashPassword(newPassword);
+
+    // Clear the reset password token and expiration time
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save(); // Save the updated user document
+
+    // Return success response
+    res.json({ message: 'Password reset successful. You can now login.'})
+}
