@@ -2,6 +2,8 @@ const User = require('../models/user.model'); // User model for database operati
 const QRCode = require('qrcode'); // Library for generating QR codes
 const authService = require('../services/auth.service'); // Service layer for authentication log
 
+const crypto = require('crypto'); // Node.js crypto module for generating random tokens
+const sendEmail = require('../utils/sendEmail'); // Custom email sending utility
 // Controller for user registration
 exports.register = async (req, res) => {
     // Extract email and password from request body
@@ -138,4 +140,45 @@ exports.refreshToken = async (req, res) => {
     } catch {
         res.status(403).json({ message: 'Invalid refresh token' });
     }
+}
+
+// Controller function to handle forgot password requests
+exports.forgotPassword = async (req, res) => {
+    // Extract email from request body
+    const { email } = req.body;
+
+    // Find user in database by email
+    const user = await User.findOne({ email });
+
+    // If user not found, return 404 error
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Generate a secure random token (32 bytes) and convert to hex string
+    const token = crypto.randomBytes(32).toString('hex');
+
+    // Set expiration time to 1 hour from now
+    const expiry = Date.now() + 1000 * 60 * 60; // 1 hour
+
+    // Store the token and expiration time in the user document
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = expiry;
+
+    // Save the updated user document to the database
+    await user.save();
+
+    // Create a password reset link that points to the frontend reset page
+    // with the token as a query parameter.
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+
+    await sendEmail({
+        to: email, // Recipient email
+        subject: 'Reset Your Password', // Email subject
+        html: `
+          <p>Click the link to reset your password: <a href="${resetLink}">
+          Reset Password</a></p>
+        `, // Email content with clickable link
+    });
+
+    // Return success response
+    res.json({ message: 'Password reset email sent' });
 }
