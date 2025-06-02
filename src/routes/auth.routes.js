@@ -22,5 +22,8 @@ router.post('/2fa/verify', authController.verify2FA);
 // Define a POST route for refreshing tokens
 router.post('/refresh-token', authController.refreshToken);
 
+// Define a POST route for requesting a password reset
+router.post('/forgot-password', authController.forgotPassword)
+
 // Export the router to make it available for use in other parts of the application
 module.exports = router;
