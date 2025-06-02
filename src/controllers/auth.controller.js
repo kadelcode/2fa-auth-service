@@ -4,6 +4,9 @@ const authService = require('../services/auth.service'); // Service layer for au
 
 const crypto = require('crypto'); // Node.js crypto module for generating random tokens
 const sendEmail = require('../utils/sendEmail'); // Custom email sending utility
+const getPasswordResetEmailHTML = require('../utils/emails/passwordResetTemplate') // Email Template
+
+
 // Controller for user registration
 exports.register = async (req, res) => {
     // Extract email and password from request body
@@ -170,13 +173,12 @@ exports.forgotPassword = async (req, res) => {
     // with the token as a query parameter.
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
 
+    const html = getPasswordResetEmailHTML(resetLink, user.name);
+
     await sendEmail({
         to: email, // Recipient email
         subject: 'Reset Your Password', // Email subject
-        html: `
-          <p>Click the link to reset your password: <a href="${resetLink}">
-          Reset Password</a></p>
-        `, // Email content with clickable link
+        html // Email content with clickable link
     });
 
     // Return success response
