@@ -44,8 +44,13 @@ router.get(
     // - On failure, redirects to '/login'
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
-        // Optionally check user.is2FAEnabled
-        // After successful auth, redirect to dashboard
+        // Check if the user has 2FA enabled (assuming `req.user` exists after auth)
+        if (req.user.is2FAEnabled) {
+            // Redirect to 2FA verification page instead of dashboard
+            return res.redirect('/verify-2fa');
+        }
+
+        // After successful auth, redirect to dashboard if 2FA is disabled
         res.redirect('/dashboard')
     }
 )
@@ -62,6 +67,9 @@ router.get(
     '/github/callback',
     passport.authenticate('github', { failureRedirect: '/login' }),
     (req, res) => {
+        if (req.user.is2FAEnabled) {
+            return res.redirect('/verify-2fa');
+        }
         res.redirect('/dashboard');
     }
 );
