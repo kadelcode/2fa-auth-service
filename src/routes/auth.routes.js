@@ -1,7 +1,7 @@
 // Import the Express framework
 const express = require('express');
 
-// Import passport.js 
+// Import passport.js for authentication
 const passport = require('passport');
 
 // Create a router object to handle routes
@@ -28,26 +28,41 @@ router.post('/refresh-token', authController.refreshToken);
 // Define a POST route for requesting a password reset
 router.post('/forgot-password', authController.forgotPassword)
 
-// Google login
-router.get('/google', passport.authenticate('google', {scope: ['email', 'profile'] }));
+// ===== Google OAuth2 Login Routes ==== //
 
+// Route to initiate Google OAuth2 login
+// When a user visits '/google', Passport redirects them to Google's OAuth2 consent screen
+router.get('/google', passport.authenticate('google', 
+    {scope: ['email', 'profile'] // Request access to the user's email and profile info
+}));
+
+// Callback route after Google OAuth2 authentication
 router.get(
     '/google/callback',
+    // Passport middleware handles authentication:
+    // - On success, attaches user data to `req.user`
+    // - On failure, redirects to '/login'
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
         // Optionally check user.is2FAEnabled
+        // After successful auth, redirect to dashboard
         res.redirect('/dashboard')
     }
 )
 
-// GitHub login
-router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+// ====== GitHub OAuth Login Routes ====== //
 
+// Route to initiate GitHub OAuth login
+router.get('/github', passport.authenticate('github', 
+    { scope: ['user:email'] // Request access to the user's email
+}));
+
+// Callback route after GitHub authentication
 router.get(
     '/github/callback',
     passport.authenticate('github', { failureRedirect: '/login' }),
     (req, res) => {
-        res.redirect('/dashboard')
+        res.redirect('/dashboard');
     }
 );
 
