@@ -13,6 +13,18 @@ const userSchema = new mongoose.Schema({
     // Password field (stored as a string)
     password: String,
 
+    // Social auth fields
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true, // Allows multiple null values
+    },
+    githubId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+
     // 2FA (Two-Factor Authentication) enabled flag
     is2FAEnabled: { 
       type: Boolean,    // Must be a boolean
