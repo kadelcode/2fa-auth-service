@@ -1,8 +1,10 @@
+require('dotenv').config();
+
 // Import required modules
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
-const User = require('./models/User');
+const User = require('../models/user.model');
 
 // Configure Google OAuth 2.0 strategy
 passport.use(
