@@ -6,6 +6,7 @@ const crypto = require('crypto'); // Node.js crypto module for generating random
 const sendEmail = require('../utils/sendEmail'); // Custom email sending utility
 const getPasswordResetEmailHTML = require('../utils/emails/passwordResetTemplate') // Email Template
 
+const FRONTEND_URL=process.env.FRONTEND_URL || "http://localhost:3000";
 
 // Controller for user registration
 exports.register = async (req, res) => {
@@ -171,7 +172,7 @@ exports.forgotPassword = async (req, res) => {
 
     // Create a password reset link that points to the frontend reset page
     // with the token as a query parameter.
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    const resetLink = `${FRONTEND_URL}/reset-password?token=${token}`;
 
     const html = getPasswordResetEmailHTML(resetLink, user.name);
 
