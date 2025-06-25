@@ -30,9 +30,9 @@ app.use(express.json());
 // Any request starting with '/api/auth' will be handled by authRoutes
 app.use('/api/auth', authRoutes);
 
-app.use(require('express-session')({ secret: 'secret', resave: false, saveUninitialized: true }));
+// app.use(require('express-session')({ secret: 'secret', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 // Export the Express app so it can be used in other files (like server.js)
 // This makes the app configurable and testable
