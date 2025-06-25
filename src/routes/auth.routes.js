@@ -1,3 +1,8 @@
+
+
+const FRONTEND_URL = process.env.FRONTEND_URL || "localhost:3000";
+
+
 // Import the Express framework
 const express = require('express');
 
@@ -44,14 +49,16 @@ router.get(
     // - On failure, redirects to '/login'
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
+        const jwt = require('jsonwebtoken');
+        const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h'})
         // Check if the user has 2FA enabled (assuming `req.user` exists after auth)
         if (req.user.is2FAEnabled) {
             // Redirect to 2FA verification page instead of dashboard
-            return res.redirect('/verify-2fa');
+            return res.redirect(`${FRONTEND_URL}/verify-2fa?token=${token}`);
         }
 
         // After successful auth, redirect to dashboard if 2FA is disabled
-        res.redirect('/dashboard')
+        res.redirect(`${FRONTEND_URL}/dashboard`)
     }
 )
 
