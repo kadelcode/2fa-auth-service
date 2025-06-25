@@ -13,7 +13,7 @@ passport.use(
             // Configuration options for Google strategy
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: '/auth/google/callback', // Callback URL after Google authentication
+            callbackURL: '/api/auth/google/callback', // Callback URL after Google authentication
         },
         // Verification function that runs after successful Google authentication
         async (accessToken, refreshToken, profile, done) => {
