@@ -1,5 +1,6 @@
 // Import the Express framework to create a web server
 const express = require('express');
+const session = require('express-session');
 
 const passport = require('passport');
 require('./config/passport'); // Import passport strategies
@@ -30,9 +31,14 @@ app.use(express.json());
 // Any request starting with '/api/auth' will be handled by authRoutes
 app.use('/api/auth', authRoutes);
 
-// app.use(require('express-session')({ secret: 'secret', resave: false, saveUninitialized: true }));
+app.use(session({ 
+    secret: process.env.SESSION_SECRET || 'secret', 
+    resave: false, 
+    saveUninitialized: true 
+}));
+
 app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.session()); // required for persistent login sessions
 
 // Export the Express app so it can be used in other files (like server.js)
 // This makes the app configurable and testable
