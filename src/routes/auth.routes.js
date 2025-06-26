@@ -1,6 +1,6 @@
 
 
-const FRONTEND_URL = process.env.FRONTEND_URL || "localhost:3000";
+const FRONTEND_URL = "http://localhost:3000";
 
 
 // Import the Express framework
@@ -54,7 +54,7 @@ router.get(
         // Check if the user has 2FA enabled (assuming `req.user` exists after auth)
         if (req.user.is2FAEnabled) {
             // Redirect to 2FA verification page instead of dashboard
-            return res.redirect(`${FRONTEND_URL}/verify-2fa?token=${token}`);
+            return res.redirect(`${FRONTEND_URL}/setup-2fa?token=${token}`);
         }
 
         // After successful auth, redirect to dashboard if 2FA is disabled
