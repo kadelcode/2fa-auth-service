@@ -55,7 +55,7 @@ const generateToken = (user) => {
 const generate2FASecret = (email) => {
     // Generate a secret key with the app name and user's email
     return speakeasy.generateSecret({
-      name: `MyApp (${email})` // This appears in authenticator apps
+      name: `2FA Auth App (${email})` // This appears in authenticator apps
     });
 };
 
