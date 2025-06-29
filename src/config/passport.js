@@ -1,4 +1,5 @@
 require('dotenv').config();
+const axios = require('axios');
 
 // Import required modules
 const passport = require('passport');
@@ -60,17 +61,32 @@ passport.use(
             // Configuration options for GitHub strategy
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
-            callbackURL: '/auth/github/callback', // Callback URL after GitHub authentication
+            callbackURL: '/api/auth/github/callback', // Callback URL after GitHub authentication
         },
         // Verification function that runs after successful GitHub authentication
         async (accessToken, refreshToken, profile, done) => {
             try {
+                // Fetch emails from GitHub API using accessToken
+                const { data: emails } = await axios.get('https://api.github.com/user/emails', {
+                    headers: {
+                        Authorization: `token ${accessToken}`,
+                        Accept: 'application/vnd.github.v3+json',
+                    },
+                });
+
+                // Get primary verified email
+                const primaryEmail = emails.find(email => email.primary && email.verified)?.email || email;
+
+                if (!primaryEmail) {
+                    return done(new Error('No verified email returned from Github'), null);
+                }
+
                 // Check if user already exists in database using GitHub ID
                 let user = await User.findOne({ githubId: profile.id });
 
                 if (!user) {
                     // If not found, try by email
-                    user = await User.findOne({ email: profile.emails[0].value });
+                    user = await User.findOne({ email: primaryEmail });
 
                     if (user) {
                         // Link the existing account to GitHub
@@ -94,6 +110,7 @@ passport.use(
                 // Pass the user object to Passport
                 done(null, user);
             } catch (err) {
+                console.error('GitHub OAuth error:', err.message);
                 done(err, null)
             }
         }

@@ -72,12 +72,15 @@ router.get('/github', passport.authenticate('github',
 // Callback route after GitHub authentication
 router.get(
     '/github/callback',
-    passport.authenticate('github', { failureRedirect: '/login' }),
+    passport.authenticate('github', { session: false, failureRedirect: '/login' }),
     (req, res) => {
+        const jwt = require('jsonwebtoken');
+        const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
+
         if (req.user.is2FAEnabled) {
-            return res.redirect('/verify-2fa');
+            return res.redirect(`${FRONTEND_URL}/setup-2fa?token=${token}`);
         }
-        res.redirect('/dashboard');
+        res.redirect(`${FRONTEND_URL}/dashboard`);
     }
 );
 
